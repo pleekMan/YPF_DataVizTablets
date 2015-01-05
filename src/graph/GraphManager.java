@@ -36,12 +36,14 @@ public class GraphManager {
 		}
 	}
 	
-	public void createGraph(){
+	public void createGraph(String filter){
 		
-		ArrayList<DataPack> newPacks = database.getDataPacks("cat:turismo");
-		
+		ArrayList<DataPack> newPacks = database.getDataPacks(filter);
 		Graph newGraph = new Graph(newPacks);
+		newGraph.setup("All: " + filter);
+		newGraph.setPosition(p5.mouseX, p5.mouseY);
 		graphs.add(newGraph);
+		
 	}
 	
 	

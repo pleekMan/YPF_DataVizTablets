@@ -24,15 +24,28 @@ public class Main extends PApplet {
 		frame.setTitle(Integer.toString(((int) frameRate)) + " fps");
 		background(0);
 		
+		graphManager.update();
+		graphManager.render();
+		
 	}
 
 
 	public void keyPressed() {
 
 		
-		if (key == 'e') {
-
+		if (key == '1') {
+			graphManager.createGraph("Turismo");
 		}
+		if (key == '2') {
+			graphManager.createGraph("Gastronomia");
+		}
+		if (key == '3') {
+			graphManager.createGraph("Beneficios");
+		}
+		if (key == '4') {
+			graphManager.createGraph("Varios");
+		}
+
 
 	}
 

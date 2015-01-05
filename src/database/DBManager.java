@@ -9,7 +9,7 @@ import globals.PAppletSingleton;
 public class DBManager {
 
 	Main p5;
-	Table refTable; // HOLDS THE INDEX OF FULL QUESTIONS
+	public static Table refTable; // HOLDS THE INDEX OF FULL QUESTIONS
 	Table sociosTable; // INPUT FROM TABLETS
 	Table noSociosTable; // INPUT FROM TABLETS
 
@@ -37,10 +37,10 @@ public class DBManager {
 			// PLAYER
 			int questionsAnswered;
 			int columnOffset;
-			if (getColumnsInRow(row) == 10) {
+			if (getColumnsCountInRow(row) == 10) {
 				questionsAnswered = 2;
 				columnOffset = 2;
-			} else if (getColumnsInRow(row) == 12) {
+			} else if (getColumnsCountInRow(row) == 12) {
 				questionsAnswered = 3;
 				columnOffset = 4;
 			} else {
@@ -62,9 +62,9 @@ public class DBManager {
 
 				DataPack newPack = new DataPack(true);
 
-				int _key = row.getInt(2 + (i * 2));
+				int _key = row.getInt(2 + (j * 2));
 				String _question = findQuestion(_key);
-				int _answer = row.getInt(3 + (i * 2));
+				int _answer = row.getInt(3 + (j * 2));
 				String _category = findCategory(_key);
 
 				newPack.fill_CommonFields(_dni, _key, _question, _answer, _category, _fecha, _latitud, _longitud, _lugar);
@@ -78,6 +78,7 @@ public class DBManager {
 
 		}
 
+		
 		p5.println("---------------/// NO SOCIOS");
 
 		// NO SOCIOS
@@ -89,10 +90,10 @@ public class DBManager {
 			// PLAYER
 			int questionsAnswered;
 			int columnOffset;
-			if (getColumnsInRow(row) == 17) {
+			if (getColumnsCountInRow(row) == 17) {
 				questionsAnswered = 2;
 				columnOffset = 2;
-			} else if (getColumnsInRow(row) == 19) {
+			} else if (getColumnsCountInRow(row) == 19) {
 				questionsAnswered = 3;
 				columnOffset = 4;
 			} else {
@@ -123,9 +124,9 @@ public class DBManager {
 
 				DataPack newPack = new DataPack(false);
 
-				int _key = row.getInt(9 + (i * 2));
+				int _key = row.getInt(9 + (j * 2));
 				String _question = findQuestion(_key);
-				int _answer = row.getInt(10 + (i * 2));
+				int _answer = row.getInt(10 + (j * 2));
 				String _category = findCategory(_key);
 
 				newPack.fill_CommonFields(_dni, _key, _question, _answer, _category, _fecha, _latitud, _longitud, _lugar);
@@ -137,10 +138,11 @@ public class DBManager {
 
 			}
 		}
+		
 
 	}
 
-	private int getColumnsInRow(TableRow row) {
+	private int getColumnsCountInRow(TableRow row) {
 
 		int columnCount = 0;
 		for (int i = 0; i < row.getColumnCount(); i++) {
@@ -209,21 +211,21 @@ public class DBManager {
 
 	public ArrayList<DataPack> getDataPacks(String filter) {
 
-		// TODO LOS DATAPACKS TIENE 3 PREGUNTAS EN DIFERENTES CATEGORIAS.
-		// SIFILTRO POR, SAY, CATEGORIA, NO PUEDO MANDAR 1/2 DATAPACK
-
 		ArrayList<DataPack> filteredPack = new ArrayList<DataPack>();
 
-		if (filter.equals("cat:turismo")) {
 			for (int i = 0; i < dataPacks.size(); i++) {
 
 				DataPack actualPack = dataPacks.get(i);
 
-
-			}
-		}
-
+				if (actualPack.getCategory().equals(filter)) {
+					filteredPack.add(actualPack);
+				}				
+			}		
 		return filteredPack;
+	}
+	
+	public static Table getReferenceTable(){
+		return refTable;
 	}
 
 	protected Main getP5() {
