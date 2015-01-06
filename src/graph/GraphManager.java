@@ -36,12 +36,14 @@ public class GraphManager {
 		}
 	}
 	
-	public void createGraph(String filter){
+	public void createGraph(String field, String value){
 		
-		ArrayList<DataPack> newPacks = database.getDataPacks(filter);
+		ArrayList<DataPack> newPacks = database.getDataPacks(field, value);
 		Graph newGraph = new Graph(newPacks);
-		newGraph.setup("All: " + filter);
+		newGraph.setup("All: " + value);
 		newGraph.setPosition(p5.mouseX, p5.mouseY);
+		newGraph.setDiameter(200);
+		newGraph.colorBy("correct");
 		graphs.add(newGraph);
 		
 	}

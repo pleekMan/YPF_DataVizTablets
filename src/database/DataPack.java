@@ -6,6 +6,7 @@ public class DataPack {
 	String question;
 	int answer;
 	String category;
+	boolean isCorrect;
 	
 	String fecha;
 	
@@ -35,12 +36,13 @@ public class DataPack {
 		isSocio = _isSocio;;
 	}
 	
-	public void fill_CommonFields(int _dni, int _key, String _question, int _answer, String _category, String _fecha, int _latitud, int _longitud, String _lugar){
+	public void fill_CommonFields(int _dni, int _key, String _question, int _answer, String _category, boolean _correct, String _fecha, int _latitud, int _longitud, String _lugar){
 		dni = _dni;
 		key = _key;
 		question = _question;
 		answer = _answer;
 		category = _category;
+		isCorrect = _correct;
 		fecha = _fecha;
 		latitud = _latitud;
 		longitud = _longitud;
@@ -76,6 +78,10 @@ public class DataPack {
 
 	public String getCategory() {
 		return category;
+	}
+
+	public boolean isCorrect() {
+		return isCorrect;
 	}
 
 	public String getFecha() {

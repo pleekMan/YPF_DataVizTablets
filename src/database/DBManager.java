@@ -66,8 +66,9 @@ public class DBManager {
 				String _question = findQuestion(_key);
 				int _answer = row.getInt(3 + (j * 2));
 				String _category = findCategory(_key);
+				boolean _isCorrect = findIsCorrect(_key, _answer);
 
-				newPack.fill_CommonFields(_dni, _key, _question, _answer, _category, _fecha, _latitud, _longitud, _lugar);
+				newPack.fill_CommonFields(_dni, _key, _question, _answer, _category, _isCorrect, _fecha, _latitud, _longitud, _lugar);
 				newPack.fill_Socio(row.getInt(0));
 
 				dataPacks.add(newPack);
@@ -78,7 +79,6 @@ public class DBManager {
 
 		}
 
-		
 		p5.println("---------------/// NO SOCIOS");
 
 		// NO SOCIOS
@@ -128,8 +128,9 @@ public class DBManager {
 				String _question = findQuestion(_key);
 				int _answer = row.getInt(10 + (j * 2));
 				String _category = findCategory(_key);
+				boolean _isCorrect = findIsCorrect(_key, _answer);
 
-				newPack.fill_CommonFields(_dni, _key, _question, _answer, _category, _fecha, _latitud, _longitud, _lugar);
+				newPack.fill_CommonFields(_dni, _key, _question, _answer, _category, _isCorrect, _fecha, _latitud, _longitud, _lugar);
 				newPack.fill_NoSocio(_nombre, _apellido, _direccion, _nacimiento, _telefono, _telefonoAlt, _email, _info);
 
 				dataPacks.add(newPack);
@@ -138,7 +139,6 @@ public class DBManager {
 
 			}
 		}
-		
 
 	}
 
@@ -166,11 +166,20 @@ public class DBManager {
 		}
 		return result;
 	}
-	
+
 	private String findCategory(int _key) {
 		TableRow rowAtRefTable = refTable.findRow(Integer.toString(_key), 0);
-		//p5.print(rowAtRefTable.getString(1));
+		// p5.print(rowAtRefTable.getString(1));
 		return rowAtRefTable.getString(1);
+	}
+
+	private boolean findIsCorrect(int _key, int answer) {
+		TableRow rowAtRefTable = refTable.findRow(Integer.toString(_key), 0);
+		if (answer == rowAtRefTable.getInt(7)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private void loadTables() {
@@ -209,22 +218,49 @@ public class DBManager {
 
 	}
 
-	public ArrayList<DataPack> getDataPacks(String filter) {
+	public ArrayList<DataPack> getDataPacks(String field, String value) {
 
 		ArrayList<DataPack> filteredPack = new ArrayList<DataPack>();
 
-			for (int i = 0; i < dataPacks.size(); i++) {
+		for (int i = 0; i < dataPacks.size(); i++) {
 
-				DataPack actualPack = dataPacks.get(i);
+			DataPack actualPack = dataPacks.get(i);
 
-				if (actualPack.getCategory().equals(filter)) {
-					filteredPack.add(actualPack);
-				}				
-			}		
+			if (filter(actualPack, field, value)) {
+				filteredPack.add(actualPack);
+			}
+
+			/*
+			 * if (actualPack.getCategory().equals(filter)) {
+			 * filteredPack.add(actualPack); }
+			 */
+		}
 		return filteredPack;
 	}
-	
-	public static Table getReferenceTable(){
+
+	private boolean filter(DataPack actualPack, String field, String value) {
+
+		if (field.equals("categoria")) {
+			if (actualPack.getCategory().equals(value)) {
+				return true;
+			}
+		} else if (field.equals("correct")) {
+			if (actualPack.isCorrect()) {
+				return true;
+			}
+		} else if (field.equals("lugar")) {
+			if (actualPack.getLugar().equals(value)) {
+				return true;
+			}
+		} else if (field.equals("socio")) {
+			if (actualPack.isSocio()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static Table getReferenceTable() {
 		return refTable;
 	}
 

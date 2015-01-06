@@ -34,16 +34,19 @@ public class Main extends PApplet {
 
 		
 		if (key == '1') {
-			graphManager.createGraph("Turismo");
+			graphManager.createGraph("categoria","turismo");;
 		}
 		if (key == '2') {
-			graphManager.createGraph("Gastronomia");
+			graphManager.createGraph("categoria","beneficios");
 		}
 		if (key == '3') {
-			graphManager.createGraph("Beneficios");
+			graphManager.createGraph("categoria","gastronomia");
 		}
 		if (key == '4') {
-			graphManager.createGraph("Varios");
+			graphManager.createGraph("categoria","varios");
+		}
+		if (key == '5') {
+			graphManager.createGraph("socio","");
 		}
 
 
