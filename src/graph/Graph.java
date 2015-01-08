@@ -131,6 +131,7 @@ public class Graph {
 			for (int i = 0; i < dataPacks.size(); i++) {
 				if (dataPacks.get(i).isCorrect()) {
 					slices.get(i).setColor(colors[0]);
+					slices.get(i).setLabel("Q: " + dataPacks.get(i).getQuestion() + " / A: " + dataPacks.get(i).getAnswer() + " / C: " + dataPacks.get(i).isCorrect());
 				} else {
 					slices.get(i).setColor(colors[1]);
 				}
@@ -153,6 +154,9 @@ public class Graph {
 
 		// RESIZE COLORS ARRAY
 		// colors = p5.expand(colors, valuesThatAreDifferent.size());
+		
+		GraphFilter graphFilter = new GraphFilter();
+		graphFilter.filter(dataPacks, "correct");
 
 	}
 
