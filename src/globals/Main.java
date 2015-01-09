@@ -2,6 +2,7 @@ package globals;
 
 import graph.GraphManager;
 import database.DBManager;
+import de.looksgood.ani.Ani;
 import processing.core.PApplet;
 
 public class Main extends PApplet {
@@ -9,9 +10,13 @@ public class Main extends PApplet {
 	DBManager database;
 	GraphManager graphManager;
 	
+	public Ani animation;
+	
 	public void setup() {
 		size(1024, 768, P2D);
 		setPAppletSingleton();
+		
+		animation.init(this);
 		
 		database = new DBManager();
 		graphManager = new GraphManager(database);
@@ -48,6 +53,8 @@ public class Main extends PApplet {
 		if (key == '5') {
 			graphManager.createGraph("socio","");
 		}
+		
+		graphManager.onKeyPressed(key);
 
 
 	}

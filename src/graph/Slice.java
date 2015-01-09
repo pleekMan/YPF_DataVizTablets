@@ -41,6 +41,7 @@ public class Slice {
 		p5.translate(radius + 10, 0);
 		p5.rotate(-angleStart);
 		
+		p5.fill(255);
 		p5.text(label, 0, 0);
 		
 		p5.popMatrix();
@@ -64,8 +65,22 @@ public class Slice {
 		angleStop = _stop;
 	}
 	
+	public void setStartAngle(float _start){
+		angleStart = _start;
+	}
+	
+	public void setWidth(float width){
+		angleStop = angleStart + width;
+	}
+	
 	public void setLabel(String _label){
 		label = _label;
+	}
+	
+	public void rotateTo(float _angle){
+		//p5.animation.to(this, 1f, "angleStart");
+		//p5.animation.to(this, 1f, "startAngle", _angle);
+		
 	}
 	
 	

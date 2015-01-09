@@ -4,28 +4,36 @@ import globals.Main;
 import globals.PAppletSingleton;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import database.DataPack;
 
-public class GraphFilter {
+public class GraphUtility {
 
 	Main p5;
 	int[] colors;
-
-	public GraphFilter() {
+	
+	ArrayList<Integer> finalSorting;
+	
+	public GraphUtility() {
 		p5 = getP5();
-		colors = new int[0];
+		
+		finalSorting = new ArrayList<Integer>();
+		
 
 	}
 
-	public void filter(ArrayList<DataPack> dataPacks, String filter) {
+	public void sort(ArrayList<DataPack> dataPacks, String filter) {
 
 		// PRINT INITIAL SORTING
 		p5.println("----- INITIAL SORTING -----");
 		for (int i = 0; i < dataPacks.size(); i++) {
 			p5.println(i + ": " + dataPacks.get(i).getKey());
 		}
+		
+		colors = new int[dataPacks.size()];
+
 
 		// DETERMINE HOW MANY DIFFERENTE VALUES DO WE HAVE
 
@@ -55,9 +63,9 @@ public class GraphFilter {
 		}
 
 		// SET COLORS
-		colors = p5.expand(colors, differentFields.size());
-		for (int i = 0; i < colors.length; i++) {
-			colors[i] = p5.color(p5.random(255), p5.random(255), p5.random(255));
+		int[] differentColors = new int[differentFields.size()];
+		for (int i = 0; i < differentColors.length; i++) {
+			differentColors[i] = p5.color(p5.random(255), p5.random(255), p5.random(255));
 		}
 
 		// SORTING DATAPACKS INTO PLACE
@@ -76,6 +84,7 @@ public class GraphFilter {
 
 				if (dataPackValue.equals(fieldsValue)) {
 					sliceOrder[j].add(i);
+					colors[i] = differentColors[j];
 					break;
 				}
 			}
@@ -84,7 +93,6 @@ public class GraphFilter {
 
 		// SORTING DATAPACKS INTO PLACE
 		// SECOND - MERGE ARRAYS INTO 1 LIST
-		ArrayList<Integer> finalSorting = new ArrayList<Integer>();
 		for (int i = 0; i < sliceOrder.length; i++) {
 			finalSorting.addAll(sliceOrder[i]);
 		}
@@ -99,7 +107,20 @@ public class GraphFilter {
 		for (int i = 0; i < finalSorting.size(); i++) {
 			p5.println("- Q: " + dataPacks.get(finalSorting.get(i)).getKey() + " / A: " + stringifyByFilter(dataPacks.get(finalSorting.get(i)), filter));
 		}
+		
 
+	}
+	
+	public int[] getOrderingIndex(){
+		int[] sortingAsInts = new int[finalSorting.size()];
+		for (int i = 0; i < finalSorting.size(); i++) {
+			sortingAsInts[i] = finalSorting.get(i).intValue();
+		}
+		return sortingAsInts;
+	}
+	
+	public int[] getColors(){
+		return colors;
 	}
 
 	private String stringifyByFilter(DataPack dataPack, String filter) {

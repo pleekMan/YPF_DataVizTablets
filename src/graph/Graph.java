@@ -19,8 +19,9 @@ public class Graph {
 	ArrayList<DataPack> dataPacks;
 	ArrayList<Slice> slices;
 	int[] colors;
+	float sliceWidth;
 
-	float correct;// , inCorrect;
+	float correct;
 
 	public Graph(ArrayList<DataPack> inPacks) {
 		p5 = getP5();
@@ -40,8 +41,7 @@ public class Graph {
 		for (int i = 0; i < colors.length; i++) {
 			colors[i] = p5.color(255, 255, 0);
 		}
-
-		// correct = inCorrect = 0f;
+		
 		correct = 0;
 	}
 
@@ -54,31 +54,24 @@ public class Graph {
 
 			DataPack actualPack = dataPacks.get(i);
 
-			float angleWidth = p5.TWO_PI / dataPacks.size();
-			float startAngle = angleWidth * i;
+			sliceWidth = p5.TWO_PI / dataPacks.size();
+			float startAngle = sliceWidth * i;
+			
+			slices.get(i).setStartAngle(startAngle - p5.HALF_PI);
+			slices.get(i).setWidth(sliceWidth);
+			//slices.get(i).setAngles(startAngle - p5.HALF_PI, startAngle + sliceWidth);
+			
+			//slices.get(i).setLabel(Integer.toString(actualPack.getKey()));
+			slices.get(i).setLabel(actualPack.getQuestion());
 
-			slices.get(i).setAngles(startAngle, startAngle + angleWidth);
 
-			/*
-			 * int questionId = actualPack.getKey();
-			 * 
-			 * TableRow questionRow =
-			 * DBManager.getReferenceTable().findRow(Integer
-			 * .toString(questionId), 0); if (actualPack.getAnswer() ==
-			 * questionRow.getInt(7)) { correct++; }
-			 * 
-			 * p5.println(actualPack.getQuestion() + " : " +
-			 * actualPack.getAnswer() + " : " + questionRow.getInt(7));
-			 */
+
 		}
-
-		// LET'S NORMALIZE CORRECT/INCORRECT
-		// correct = correct / dataPacks.size();
-		// inCorrect = 1 - correct;
 
 	}
 
 	public void update() {
+		
 
 	}
 
@@ -117,47 +110,23 @@ public class Graph {
 		}
 	}
 
-	public void colorBy(String filter) {
-
-		// ArrayList<String> valuesThatAreDifferent = new ArrayList<String>();
-
-		if (filter.equals("correct")) {
-
-			colors = p5.expand(colors, 2);
-			for (int i = 0; i < colors.length; i++) {
-				colors[i] = p5.color(p5.random(255), p5.random(255), p5.random(255));
-			}
-
-			for (int i = 0; i < dataPacks.size(); i++) {
-				if (dataPacks.get(i).isCorrect()) {
-					slices.get(i).setColor(colors[0]);
-					slices.get(i).setLabel("Q: " + dataPacks.get(i).getQuestion() + " / A: " + dataPacks.get(i).getAnswer() + " / C: " + dataPacks.get(i).isCorrect());
-				} else {
-					slices.get(i).setColor(colors[1]);
-				}
-			}
-
-			/*
-			 * // ADD FIRST VALUE. THE NEXT LOOP STARTS AT 1
-			 * valuesThatAreDifferent
-			 * .add(Boolean.toString(dataPacks.get(0).isCorrect()));
-			 * 
-			 * for (int i = 1; i < dataPacks.size(); i++) {
-			 * 
-			 * String value = Boolean.toString(dataPacks.get(0).isCorrect());
-			 * 
-			 * for (int j = 0; j < valuesThatAreDifferent.size(); j++) { if
-			 * (value != valuesThatAreDifferent.get(j)) {
-			 * valuesThatAreDifferent.add(value); } } }
-			 */
-		}
-
-		// RESIZE COLORS ARRAY
-		// colors = p5.expand(colors, valuesThatAreDifferent.size());
+	public void arrange(String filter) {
 		
-		GraphFilter graphFilter = new GraphFilter();
-		graphFilter.filter(dataPacks, "fecha");
-
+		GraphUtility graphUtility = new GraphUtility();
+		graphUtility.sort(dataPacks, filter);
+		
+		// ORDER AND SHIFT/ROTATE SLICES
+		int[] newOrder = graphUtility.getOrderingIndex();
+		int[] sliceColors = graphUtility.getColors();
+		
+		// TODO SLICES ARE NOT ROTATING TO POSITION
+		for (int i = 0; i < newOrder.length; i++) {
+			slices.get(newOrder[i]).rotateTo((sliceWidth * i) - p5.HALF_PI);
+			slices.get(newOrder[i]).setColor(sliceColors[i]);
+			//slices.get(i).setLabel(Integer.toString(newOrder[i]));
+		}
+		
+		
 	}
 
 	protected Main getP5() {
