@@ -26,62 +26,33 @@ public class GraphFilter {
 		for (int i = 0; i < dataPacks.size(); i++) {
 			p5.println(i + ": " + dataPacks.get(i).getKey());
 		}
-		
+
 		// DETERMINE HOW MANY DIFFERENTE VALUES DO WE HAVE
 
 		ArrayList<String> differentFields = new ArrayList<String>();
 
-		if (filter.equals("socio")) {
+		// ADD FIRST VALUE
+		differentFields.add(stringifyByFilter(dataPacks.get(0), filter));
 
-			differentFields.add(Boolean.toString(dataPacks.get(0).isSocio()));
-			for (int i = 1; i < dataPacks.size(); i++) {
-				String dataPackValue = Boolean.toString(dataPacks.get(i).isSocio());
-				boolean match = false;
+		for (int i = 1; i < dataPacks.size(); i++) {
+			String dataPackValue = stringifyByFilter(dataPacks.get(i), filter);
+			boolean match = false;
 
-				for (int j = 0; j < differentFields.size(); j++) {
-					String fieldsValue = differentFields.get(j);
+			for (int j = 0; j < differentFields.size(); j++) {
+				String fieldsValue = differentFields.get(j);
 
-					// IT ALREADY EXIST, STOP LOOKING
-					if (dataPackValue.equals(fieldsValue)) {
-						match = true;
-						break;
-					}
-				}
-
-				// NO MATCH FOUND, ADD IT
-				if (!match) {
-					differentFields.add(dataPackValue);
+				// IT ALREADY EXIST, STOP LOOKING
+				if (dataPackValue.equals(fieldsValue)) {
+					match = true;
+					break;
 				}
 			}
-		}
 
-		if (filter.equals("correct")) {
-
-			differentFields.add(Boolean.toString(dataPacks.get(0).isCorrect()));
-			for (int i = 1; i < dataPacks.size(); i++) {
-				String dataPackValue = Boolean.toString(dataPacks.get(i).isCorrect());
-				boolean match = false;
-
-				for (int j = 0; j < differentFields.size(); j++) {
-					String fieldsValue = differentFields.get(j);
-
-					// IT ALREADY EXIST, STOP LOOKING
-					if (dataPackValue.equals(fieldsValue)) {
-						match = true;
-						break;
-					}
-				}
-
-				// NO MATCH FOUND, ADD IT
-				if (!match) {
-					differentFields.add(dataPackValue);
-				}
+			// NO MATCH FOUND, ADD IT
+			if (!match) {
+				differentFields.add(dataPackValue);
 			}
 		}
-		
-		
-		
-		
 
 		// SET COLORS
 		colors = p5.expand(colors, differentFields.size());
@@ -90,15 +61,15 @@ public class GraphFilter {
 		}
 
 		// SORTING DATAPACKS INTO PLACE
-		// FIRST - SET UP THE PRE-LISTS (AN ARRAY OF ARRAYLISTS)
+		// FIRST - SET UP THE PRE-LISTS (AN ARRAY OF ARRAYLISTS) OF INTEGERS (OF PLACES OF ORDERING)
 		List<Integer>[] sliceOrder = new List[differentFields.size()];
 		for (int i = 0; i < sliceOrder.length; i++) {
 			sliceOrder[i] = new ArrayList<Integer>();
 		}
 
+		// ADD THE i INT IN THE APPROPIATE LIST
 		for (int i = 0; i < dataPacks.size(); i++) {
-			// TODO OJO Q ACA TENGO Q GET. EL MISMO METODO Q EL FILTRO.. GARRON..!!
-			String dataPackValue = Boolean.toString(dataPacks.get(i).isCorrect());
+			String dataPackValue = stringifyByFilter(dataPacks.get(i), filter);
 
 			for (int j = 0; j < differentFields.size(); j++) {
 				String fieldsValue = differentFields.get(j);
@@ -117,20 +88,33 @@ public class GraphFilter {
 		for (int i = 0; i < sliceOrder.length; i++) {
 			finalSorting.addAll(sliceOrder[i]);
 		}
-		
+
 		p5.println("----- FINAL SORTING -----");
 		for (int i = 0; i < finalSorting.size(); i++) {
-			p5.println(i +  ": " + finalSorting.get(i));
+			p5.println(i + ": " + finalSorting.get(i));
 		}
 		p5.println("----- -----");
 
-
 		// CHECK IT OUT
-		// TODO OJO Q PRINTEO SOLO SOCIO
 		for (int i = 0; i < finalSorting.size(); i++) {
-			p5.println("- Q: " + dataPacks.get(finalSorting.get(i)).getKey() + " / A: " + dataPacks.get(finalSorting.get(i)).isCorrect()); 
+			p5.println("- Q: " + dataPacks.get(finalSorting.get(i)).getKey() + " / A: " + stringifyByFilter(dataPacks.get(finalSorting.get(i)), filter));
 		}
 
+	}
+
+	private String stringifyByFilter(DataPack dataPack, String filter) {
+		if (filter.equals("socio"))
+			return Boolean.toString(dataPack.isSocio());
+		if (filter.equals("correcta"))
+			return Boolean.toString(dataPack.isCorrect());
+		if (filter.equals("pregunta"))
+			return dataPack.getQuestion();
+		if (filter.equals("lugar"))
+			return dataPack.getLugar();
+		if (filter.equals("fecha"))
+			return dataPack.getFecha();
+
+		return null;
 	}
 
 	protected Main getP5() {

@@ -156,7 +156,7 @@ public class Graph {
 		// colors = p5.expand(colors, valuesThatAreDifferent.size());
 		
 		GraphFilter graphFilter = new GraphFilter();
-		graphFilter.filter(dataPacks, "correct");
+		graphFilter.filter(dataPacks, "fecha");
 
 	}
 
