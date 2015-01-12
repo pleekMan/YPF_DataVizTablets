@@ -14,17 +14,26 @@ public class GraphUtility {
 	Main p5;
 	int[] colors;
 	
+	ArrayList<DataPack> dataPacks;
 	ArrayList<Integer> finalSorting;
 	
-	public GraphUtility() {
+	ArrayList<String> differentFields;
+	ArrayList<Integer> differentFieldsStartSlice;
+
+	
+	public GraphUtility(ArrayList<DataPack> graphPacks) {
 		p5 = getP5();
 		
+		dataPacks = graphPacks;
 		finalSorting = new ArrayList<Integer>();
 		
+		differentFields = new ArrayList<String>();
+		differentFieldsStartSlice = new ArrayList<Integer>();
 
+		
 	}
 
-	public void sort(ArrayList<DataPack> dataPacks, String filter) {
+	public void sort(String filter) {
 
 		// PRINT INITIAL SORTING
 		p5.println("----- INITIAL SORTING -----");
@@ -36,11 +45,13 @@ public class GraphUtility {
 
 
 		// DETERMINE HOW MANY DIFFERENTE VALUES DO WE HAVE
-
-		ArrayList<String> differentFields = new ArrayList<String>();
-
+		
 		// ADD FIRST VALUE
+		differentFields.clear();
 		differentFields.add(stringifyByFilter(dataPacks.get(0), filter));
+		
+		differentFieldsStartSlice.clear();
+		differentFieldsStartSlice.add(0);
 
 		for (int i = 1; i < dataPacks.size(); i++) {
 			String dataPackValue = stringifyByFilter(dataPacks.get(i), filter);
@@ -59,6 +70,7 @@ public class GraphUtility {
 			// NO MATCH FOUND, ADD IT
 			if (!match) {
 				differentFields.add(dataPackValue);
+				differentFieldsStartSlice.add(i);
 			}
 		}
 
@@ -93,6 +105,7 @@ public class GraphUtility {
 
 		// SORTING DATAPACKS INTO PLACE
 		// SECOND - MERGE ARRAYS INTO 1 LIST
+		finalSorting.clear();
 		for (int i = 0; i < sliceOrder.length; i++) {
 			finalSorting.addAll(sliceOrder[i]);
 		}
@@ -119,6 +132,22 @@ public class GraphUtility {
 		return sortingAsInts;
 	}
 	
+	public String[] getDifferentFields() {
+		String[] differentFieldsAsArray = new String[differentFields.size()];
+		for (int i = 0; i < differentFieldsAsArray.length; i++) {
+			differentFieldsAsArray[i] = differentFields.get(i);
+		}
+		return differentFieldsAsArray;
+	}
+
+	public int[] getDifferentFieldsStartSlice() {
+		int[] differentFieldsStartSliceAsInts = new int[differentFieldsStartSlice.size()];
+		for (int i = 0; i < differentFieldsStartSlice.size(); i++) {
+			differentFieldsStartSliceAsInts[i] = differentFieldsStartSlice.get(i).intValue();
+		}
+		return differentFieldsStartSliceAsInts;
+	}
+
 	public int[] getColors(){
 		return colors;
 	}

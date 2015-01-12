@@ -56,6 +56,16 @@ public class GraphManager {
 	public void onKeyPressed(char key) {
 		if (key == 'a') {
 			for (int i = 0; i < graphs.size(); i++) {
+				graphs.get(i).arrange("socio");
+			}
+		}
+		if (key == 's') {
+			for (int i = 0; i < graphs.size(); i++) {
+				graphs.get(i).arrange("correcta");
+			}
+		}
+		if (key == 'd') {
+			for (int i = 0; i < graphs.size(); i++) {
 				graphs.get(i).arrange("fecha");
 			}
 		}
